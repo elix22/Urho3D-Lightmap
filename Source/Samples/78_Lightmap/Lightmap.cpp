@@ -374,9 +374,11 @@ void Lightmap::SetCameraPosRotForCapture(unsigned idx)
     {
         const PixelPoint &pixelPoint = pixelData_[curPixelIdx_];
         unsigned prevTriIdx = pixelPoint.triIdx_;
+        Quaternion qrot;
+        qrot.FromLookRotation(pixelPoint.normal_);
 
         captureParser_[idx].camNode_->SetPosition(pixelPoint.pos_);
-        captureParser_[idx].camNode_->SetDirection(pixelPoint.normal_);
+        captureParser_[idx].camNode_->SetRotation(qrot);
         captureParser_[idx].pixelIdx_  = curPixelIdx_;
         captureParser_[idx].triIdx_    = pixelPoint.triIdx_;
         captureParser_[idx].isStopped_ = false;

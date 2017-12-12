@@ -98,7 +98,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="8">
 			<attribute name="Model" value="Model;Lightmap/Models/pillar.mdl" />
-			<attribute name="Material" value="Material;Lightmap/Materials/defaultMat.xml" />
+			<attribute name="Material" value="Material;Lightmap/Materials/pillarMat.xml" />
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="View Mask" value="1" />
 		</component>
@@ -128,7 +128,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="10">
 			<attribute name="Model" value="Model;Lightmap/Models/pillar.mdl" />
-			<attribute name="Material" value="Material;Lightmap/Materials/defaultMat.xml" />
+			<attribute name="Material" value="Material;Lightmap/Materials/pillarMat.xml" />
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="View Mask" value="1" />
 		</component>
@@ -143,7 +143,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="11">
 			<attribute name="Model" value="Model;Lightmap/Models/pillar.mdl" />
-			<attribute name="Material" value="Material;Lightmap/Materials/defaultMat.xml" />
+			<attribute name="Material" value="Material;Lightmap/Materials/pillarMat.xml" />
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="View Mask" value="1" />
 		</component>
