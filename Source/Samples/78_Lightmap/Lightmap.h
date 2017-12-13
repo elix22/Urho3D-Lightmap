@@ -78,7 +78,7 @@ public:
     SharedPtr<Image> GetIndirectLightImage() { return indirectLightImage_; }
 
     void SetLumaOutputColor(bool bset)       { lumaOutputColor_ = bset; }
-    bool GetLumaOutputColor(bool bset) const { return lumaOutputColor_; }
+    bool GetLumaOutputColor() const          { return lumaOutputColor_; }
 
     // dbg
     void DrawDebugGeometry(DebugRenderer* debug, const Color &color, bool depthTest, unsigned &triIdx);
