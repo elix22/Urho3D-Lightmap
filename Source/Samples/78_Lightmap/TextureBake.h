@@ -72,7 +72,8 @@ public:
     bool RestoreModelSetting();
     void BakeDirectLight(const String &filepath, unsigned imageSize=DEFAULT_IMAGE_SIZE);
     void BakeIndirectLight(const String &filepath, unsigned imageSize=DEFAULT_IMAGE_SIZE);
-    void SwitchToLightmapTechnique(SharedPtr<Image> lightmapimg);
+    void SwitchToDirectImageUnlitTechnique();
+    void SwitchToLightmapTechnique(SharedPtr<Image> lightmapImg);
 
     void SetSavefile(bool bset) { saveFile_ =  bset; }
     bool GetSavefile() const    { return saveFile_; }
@@ -91,8 +92,6 @@ protected:
     unsigned                origViewMask_;
     unsigned                tempViewMask_;
 
-    String                  filepath_;
-
     WeakPtr<Node>           camNode_;
     WeakPtr<Camera>         camera_;
     SharedPtr<Viewport>     viewport_;
@@ -101,8 +100,9 @@ protected:
 
     SharedPtr<Image>        bakedLightImage_;
     SharedPtr<Image>        lightmapImage_;
-    bool                    bakeIndirectLight_;
+    bool                    bakeDirectLight_;
 
+    String                  filepath_;
     unsigned                texWidth_;
     unsigned                texHeight_;
     bool                    saveFile_;

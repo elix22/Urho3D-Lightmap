@@ -77,8 +77,11 @@ bool TextureBake::InitModelSetting(unsigned tempViewMask)
 
         if (staticModel_)
         {
-            origMaterial_ = staticModel_->GetMaterial()->Clone();
-            origViewMask_ = staticModel_->GetViewMask();
+            if (origMaterial_ == NULL)
+            {
+                origMaterial_ = staticModel_->GetMaterial()->Clone();
+                origViewMask_ = staticModel_->GetViewMask();
+            }
 
             // assign temp view mask during the process
             tempViewMask_ = tempViewMask;
@@ -115,10 +118,10 @@ void TextureBake::BakeDirectLight(const String &filepath, unsigned imageSize)
 
         texWidth_ = texHeight_ = imageSize;
         filepath_ = filepath;
-        bakeIndirectLight_ = false;
+        bakeDirectLight_ = true;
 
         // clone mat to make changes
-        SharedPtr<Material> dupMat = staticModel_->GetMaterial()->Clone();
+        SharedPtr<Material> dupMat = origMaterial_->Clone();
         staticModel_->SetMaterial(dupMat);
 
         // choose appropriate bake technique
@@ -142,7 +145,7 @@ void TextureBake::BakeDirectLight(const String &filepath, unsigned imageSize)
     }
 }
 
-void TextureBake::SwitchToLightmapTechnique(SharedPtr<Image> lightmapimg)
+void TextureBake::SwitchToDirectImageUnlitTechnique()
 {
     // InitModelSetting() fn must be called 1st
     if (staticModel_)
@@ -150,7 +153,28 @@ void TextureBake::SwitchToLightmapTechnique(SharedPtr<Image> lightmapimg)
         ResourceCache* cache = GetSubsystem<ResourceCache>();
 
         // clone mat to make changes
-        SharedPtr<Material> dupMat = staticModel_->GetMaterial()->Clone();
+        SharedPtr<Material> dupMat = origMaterial_->Clone();
+        staticModel_->SetMaterial(dupMat);
+
+        // using direct light unlit
+        Technique *technique = dupMat->GetTechnique(0);
+        dupMat->SetTechnique(0, cache->GetResource<Technique>("Techniques/DiffUnlitTexCoord2.xml"));
+
+        SharedPtr<Texture2D> diffTex(new Texture2D(context_));
+        diffTex->SetData(bakedLightImage_);
+        dupMat->SetTexture(TU_DIFFUSE, diffTex);
+    }
+}
+
+void TextureBake::SwitchToLightmapTechnique(SharedPtr<Image> lightmapImg)
+{
+    // InitModelSetting() fn must be called 1st
+    if (staticModel_)
+    {
+        ResourceCache* cache = GetSubsystem<ResourceCache>();
+
+        // clone mat to make changes
+        SharedPtr<Material> dupMat = origMaterial_->Clone();
         staticModel_->SetMaterial(dupMat);
 
         // choose appropriate lightmap technique
@@ -164,7 +188,7 @@ void TextureBake::SwitchToLightmapTechnique(SharedPtr<Image> lightmapimg)
             dupMat->SetTechnique(0, cache->GetResource<Technique>("Techniques/DiffLightMap.xml"));
         }
 
-        lightmapImage_ = lightmapimg;
+        lightmapImage_ = lightmapImg;
         SharedPtr<Texture2D> emissiveTex(new Texture2D(context_));
         emissiveTex->SetData(lightmapImage_);
         dupMat->SetShaderParameter("MatEmissiveColor", Color::BLACK);
@@ -181,10 +205,10 @@ void TextureBake::BakeIndirectLight(const String &filepath, unsigned imageSize)
 
         texWidth_ = texHeight_ = imageSize;
         filepath_ = filepath;
-        bakeIndirectLight_ = true;
+        bakeDirectLight_ = false;
 
         // clone mat to make changes
-        SharedPtr<Material> dupMat = staticModel_->GetMaterial()->Clone();
+        SharedPtr<Material> dupMat = origMaterial_->Clone();
         staticModel_->SetMaterial(dupMat);
 
         // choose appropriate bake technique
@@ -246,8 +270,6 @@ void TextureBake::InitBakeLightSettings(const BoundingBox& worldBoundingBox)
 
 void TextureBake::RestoreTempViewMask()
 {
-    // restore model's orig state
-    staticModel_->SetMaterial(origMaterial_);
     staticModel_->SetViewMask(tempViewMask_);
 }
 
@@ -268,8 +290,9 @@ void TextureBake::OutputFile()
     // generate output file
     if (saveFile_)
     {
-        String name = !bakeIndirectLight_?ToString("node%u_bakeDirect.png", node_->GetID())
-                                         :ToString("node%u_bakeIndirect.png", node_->GetID());
+        String name = bakeDirectLight_?ToString("node%u_bakeDirect.png", node_->GetID())
+                                      :ToString("node%u_bakeIndirect.png", node_->GetID());
+
         String path = filepath_ + name;
 
         bakedLightImage_->SavePNG(path);
