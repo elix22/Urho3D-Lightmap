@@ -28,14 +28,15 @@ I've applied the same changes to the hlsl shader for texture baking, but for som
 ---
 ### Screenshots
 #### Direct Lighting Only
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/directonly1.png)  
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/directonly2.png)  
+![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/directlight.png)  
 
-#### Direct and Indirect Lighting
-*Shown shaded with DiffLightMap and NoTextureLightMap techniques.*
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/indirect1.png)  
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/indirect2.png)  
-  
+#### Light Bounce=1
+![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/lightbounce1.png)  
+
+#### Light Bounce=2
+![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/lightbounce2.png)  
+*Light bounces are shown shaded with DiffLightMap and NoTextureLightMap techniques.*  
+
 #### Direct Lighting Baked Textures
 ![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/bakedtextures.png)  
 
