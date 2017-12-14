@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <material>
-	<technique name="Techniques/DiffUnlit.xml" />
+	<technique name="Techniques/DiffUnlitTexCoord2.xml" />
 	<texture unit="diffuse" name="Lightmap/BakedTextures/node9_bakeIndirect.png" />
 	<parameter name="MatDiffColor" value="1 1 1 1" />
 	<parameter name="MatSpecColor" value="0 0 0 20" />

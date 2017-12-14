@@ -2,7 +2,7 @@
   
 ---
 ### Description
-Lightmap generator for Urho3D. This implementation is based on **Hugo Elias's Radiosity**. Except, I haven't implemented the skipping of pixels, evaluate, and interpolate part, but use brute force pixel processing instead. And I also use hemisphere instead of hemicube, which is used by all implementations that I've seen that use Hugo's method.
+Lightmap generator for Urho3D based on **Hugo Elias's Radiosity**. Except, I haven't implemented the skipping of pixels, evaluate, and interpolate part, but use brute force pixel processing instead. And unlike typical implementation, hemisphere is used instead of hemicube.
 
 Using Urho3D's tech., indirect lighting process is **blazing fast**.  And the accuracy of the lightmap only depends on the resolution that you choose.  
 
@@ -17,7 +17,7 @@ Here's an example of the lightmap image created at 512x512 resolution:
 **Note:** baked textures are generated via GPU.
 
 #### Full OpenGL Implementation
-I've applied the same changes to the hlsl shader for texture baking, but for some reason, I only get black images from the view capture. I will not be pursuing this fix, however, you still can generate lightmap textures. Essentially, that's all you need to achieve direct and indirect lighting shown in the below screenshots.
+I've applied the same changes to the hlsl shader for texture baking, but for some reason, I only get black images from the view capture. I will not be pursuing this fix.
 
 ---  
 ### Setup:
