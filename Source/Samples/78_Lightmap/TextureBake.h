@@ -75,8 +75,11 @@ public:
     void SwitchToDirectImageUnlitTechnique();
     void SwitchToLightmapTechnique(SharedPtr<Image> lightmapImg);
 
-    void SetSavefile(bool bset) { saveFile_ =  bset; }
-    bool GetSavefile() const    { return saveFile_; }
+    void SetSavefile(bool bset)             { saveFile_ =  bset; }
+    bool GetSavefile() const                { return saveFile_; }
+
+    void SetBakeMixFactor(float mixFactor)  { bakeMixFactor_ = mixFactor; }
+    float GetBakeMixFactor() const          { return bakeMixFactor_; }
 
 protected:
     void InitBakeLightSettings(const BoundingBox& worldBoundingBox);
@@ -100,11 +103,12 @@ protected:
 
     SharedPtr<Image>        bakedLightImage_;
     SharedPtr<Image>        lightmapImage_;
-    bool                    bakeDirectLight_;
+    bool                    bakeUnlitLight_;
 
     String                  filepath_;
     unsigned                texWidth_;
     unsigned                texHeight_;
     bool                    saveFile_;
+    float                   bakeMixFactor_;
 
 };

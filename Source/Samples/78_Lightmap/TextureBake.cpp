@@ -55,6 +55,8 @@ TextureBake::TextureBake(Context* context)
     , texWidth_(512)
     , texHeight_(512)
     , saveFile_(true)
+    , bakeUnlitLight_(false)
+    , bakeMixFactor_(0.8f)
 {
 }
 
@@ -118,7 +120,7 @@ void TextureBake::BakeDirectLight(const String &filepath, unsigned imageSize)
 
         texWidth_ = texHeight_ = imageSize;
         filepath_ = filepath;
-        bakeDirectLight_ = true;
+        bakeUnlitLight_ = false;
 
         // clone mat to make changes
         SharedPtr<Material> dupMat = origMaterial_->Clone();
@@ -191,8 +193,9 @@ void TextureBake::SwitchToLightmapTechnique(SharedPtr<Image> lightmapImg)
         lightmapImage_ = lightmapImg;
         SharedPtr<Texture2D> emissiveTex(new Texture2D(context_));
         emissiveTex->SetData(lightmapImage_);
-        dupMat->SetShaderParameter("MatEmissiveColor", Color::BLACK);
+
         dupMat->SetTexture(TU_EMISSIVE, emissiveTex);
+        dupMat->SetShaderParameter("MatEmissiveColor", Color::BLACK);
     }
 }
 
@@ -205,26 +208,24 @@ void TextureBake::BakeIndirectLight(const String &filepath, unsigned imageSize)
 
         texWidth_ = texHeight_ = imageSize;
         filepath_ = filepath;
-        bakeDirectLight_ = false;
+        bakeUnlitLight_ = true;
 
         // clone mat to make changes
         SharedPtr<Material> dupMat = origMaterial_->Clone();
         staticModel_->SetMaterial(dupMat);
 
-        // choose appropriate bake technique
-        Technique *technique = dupMat->GetTechnique(0);
-        if (technique->GetName().Find("NoTexture") != String::NPOS)
-        {
-            dupMat->SetTechnique(0, cache->GetResource<Technique>("Lightmap/Techniques/NoTextureBakeIndirect.xml"));
-        }
-        else
-        {
-            dupMat->SetTechnique(0, cache->GetResource<Technique>("Lightmap/Techniques/DiffBakeIndirect.xml"));
-        }
+        // set technique to bake both textures on texcoord2
+        dupMat->SetTechnique(0, cache->GetResource<Technique>("Lightmap/Techniques/UnlitBake.xml"));
+
+        // setup direct and indirect textures
+        SharedPtr<Texture2D> normalTex(new Texture2D(context_));
         SharedPtr<Texture2D> emissiveTex(new Texture2D(context_));
+        normalTex->SetData(bakedLightImage_);
         emissiveTex->SetData(lightmapImage_);
-        dupMat->SetShaderParameter("MatEmissiveColor", Color::BLACK);
+
+        dupMat->SetTexture(TU_NORMAL, normalTex);
         dupMat->SetTexture(TU_EMISSIVE, emissiveTex);
+        dupMat->SetShaderParameter("MixFactor", bakeMixFactor_);
 
         //**NOTE** change mask
         staticModel_->SetViewMask(staticModel_->GetViewMask() | ViewMask_Capture);
@@ -288,10 +289,9 @@ void TextureBake::Stop()
 void TextureBake::OutputFile()
 {
     // generate output file
-    if (saveFile_)
+    if (saveFile_ && bakeUnlitLight_)
     {
-        String name = bakeDirectLight_?ToString("node%u_bakeDirect.png", node_->GetID())
-                                      :ToString("node%u_bakeIndirect.png", node_->GetID());
+        String name = ToString("node%u_unlit.png", node_->GetID());
 
         String path = filepath_ + name;
 

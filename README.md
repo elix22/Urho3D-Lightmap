@@ -2,49 +2,38 @@
   
 ---
 ### Description
-Lightmap generator for Urho3D based on **Hugo Elias's Radiosity**. Except, I haven't implemented the skipping of pixels, evaluate, and interpolate part, but use brute force pixel processing instead. And unlike typical implementation, hemisphere is used instead of hemicube.
+Lightmap generator for Urho3D based on **Hugo Elias's Radiosity**. Unlike typical Hugo's implementations that you encounter, this implementation is simplified and uses brute force pixel processing method and uses hemisphere instead of hemicube.
+Indirect lighting process is **blazing fast** using Urho3D's tech., and the default scene completes in **~5 sec.**
 
-Using Urho3D's tech., indirect lighting process is **blazing fast**.  And the accuracy of the lightmap only depends on the resolution that you choose.  
-
-Here's an example of the lightmap image created at 512x512 resolution:
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/node8_lightmap.png)  
-
-#### Generates textures on texCoord2:
-* direct baked lighting
-* generated lightmaps
-* indirect baked lighting
-
-**Note:** baked textures are generated via GPU.
+#### Generates Textures via GPU:
+* lightmap - used for dynamic environment.
+* unlit - used for static environment.
 
 #### Full OpenGL Implementation
 I've applied the same changes to the hlsl shader for texture baking, but for some reason, I only get black images from the view capture. I will not be pursuing this fix.
 
 ---  
 ### Setup:
-* only one baked texture can be generated at a time, otherwise, the captured view images result in inaccuracies.
-* once the lightmapping process is complete, what's shown in the scene are shaded with xxLightmap technique.
+* the default lightmap texture size is set to 64x64. Override in **LightmapCreator::QueueNodesForIndirectLightProcess(), BeginIndirectLighting()**.
+* the default unlit baked texture size is set to 512x512. Override in **LightmapCreator::BakeIndirectLight(), BakeDirectLight()**.
+* the direct render texture size is set to 1024x1024 by default to reduce the shadow jaggedness, but it's till not smooth as it's desired. Setup is in **LightmapCreator::BakeDirectLight()**.
 * output files are placed in the **Lightmap/BakedTextures** folder.
   
+---  
+### Known Problem with Baked Textures:
+Baking the unlit textures on the GPU produces some black edges. Changing the render texture filter settings didn't help, and I'm not aware of any tricks that can be applied to fix the problem.
+
 ---
 ### Screenshots
-#### Direct Lighting Only
+#### Direct Light
 ![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/directlight.png)  
 
-#### Light Bounce=1
+#### Light Bounce 1
 ![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/lightbounce1.png)  
 
-#### Light Bounce=2
+#### Light Bounce 2
 ![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/lightbounce2.png)  
 *Light bounces are shown shaded with DiffLightMap and NoTextureLightMap techniques.*  
-
-#### Direct Lighting Baked Textures
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/bakedtextures.png)  
-
-#### Generated Lightmaps
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/generatedLightmaps.png)  
-
-#### Indirect Lighting Baked Textures
-![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/bakedIndirectTextures.png)  
 
 ---
 ### To Build

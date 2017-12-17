@@ -39,10 +39,6 @@
 		<component type="Light" id="5">
 			<attribute name="Light Type" value="Directional" />
 			<attribute name="Cast Shadows" value="true" />
-			<attribute name="CSM Splits" value="10 50 100 200" />
-			<attribute name="CSM Fade Start" value="1" />
-			<attribute name="View Size Quantize" value="4" />
-			<attribute name="View Size Minimum" value="4" />
 			<attribute name="Depth Constant Bias" value="0.0001" />
 			<attribute name="Depth Slope Bias" value="0.05" />
 			<attribute name="Normal Offset" value="0.021" />

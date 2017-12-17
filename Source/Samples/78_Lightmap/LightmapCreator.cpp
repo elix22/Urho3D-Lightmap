@@ -313,7 +313,9 @@ void LightmapCreator::QueueNodesForIndirectLightProcess()
 void LightmapCreator::BakeDirectLight(Node *node)
 {
     TextureBake *textureBake = node->GetComponent<TextureBake>();
-    textureBake->BakeDirectLight(outputPath_);
+
+    //**note** not every object needs high res texture size to capture smooth shadow
+    textureBake->BakeDirectLight(outputPath_, 1024);
 }
 
 void LightmapCreator::BakeIndirectLight(Node *node)
@@ -344,13 +346,11 @@ void LightmapCreator::RemoveCompletedNode(Node *node)
 
 void LightmapCreator::RestoreModelSettigs()
 {
-    if (lightmapState_ == LightMap_BakeDirectLight)
+    // could probably do away with this since state transitions keep changing model materials
+    for (unsigned i = 0; i < origNodeList_.Size(); ++i)
     {
-        for (unsigned i = 0; i < origNodeList_.Size(); ++i)
-        {
-            TextureBake *textureBake = origNodeList_[i]->GetComponent<TextureBake>();
-            textureBake->RestoreModelSetting();
-        }
+        TextureBake *textureBake = origNodeList_[i]->GetComponent<TextureBake>();
+        textureBake->RestoreModelSetting();
     }
 }
 

@@ -631,9 +631,9 @@ void Lightmap::SetupPixelData()
         if (uv2.y_ > yMax) yMax = uv2.y_;
 
         const int pixMinX = (int)Max(Floor(xMin * ftexSizeX)-1, 0.0f); 
-        const int pixMaxX = (int)Min( Ceil(xMax * ftexSizeX)+1,   ftexSizeX); 
+        const int pixMaxX = (int)Min( Ceil(xMax * ftexSizeX)+1, ftexSizeX); 
         const int pixMinY = (int)Max(Floor(yMin * ftexSizeY)-1, 0.0f); 
-        const int pixMaxY = (int)Min( Ceil(yMax * ftexSizeY)+1,   ftexSizeY);
+        const int pixMaxY = (int)Min( Ceil(yMax * ftexSizeY)+1, ftexSizeY);
 
         // gather info on triangle data
         TriangleData &triangleData = triangleData_[i/3];
