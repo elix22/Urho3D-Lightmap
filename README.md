@@ -5,7 +5,7 @@
 Lightmap generator for Urho3D based on **Hugo Elias's Radiosity**. Unlike typical Hugo's implementations that you encounter, this implementation is simplified and uses brute force pixel processing method and uses hemisphere instead of hemicube.
 Indirect lighting process is **blazing fast** using Urho3D's tech., and the default scene completes in **~5 sec.**
 
-#### Generates Textures via GPU:
+#### Generates Textures:
 * lightmap - used for dynamic environment.
 * unlit - used for static environment.
 

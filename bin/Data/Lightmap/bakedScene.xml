@@ -85,7 +85,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="9">
 			<attribute name="Model" value="Model;Lightmap/Models/room.mdl" />
-			<attribute name="Material" value="Material;Lightmap/Materials/node8BakedMat.xml;" />
+			<attribute name="Material" value="Material;Lightmap/Materials/node8BakedMat.xml" />
 		</component>
 	</node>
 	<node id="9">

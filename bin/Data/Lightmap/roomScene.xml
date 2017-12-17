@@ -109,7 +109,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="9">
 			<attribute name="Model" value="Model;Lightmap/Models/room.mdl" />
-			<attribute name="Material" value="Material;Lightmap/Materials/defaultMat.xml;" />
+			<attribute name="Material" value="Material;Lightmap/Materials/defaultMat.xml" />
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="View Mask" value="1" />
 		</component>
