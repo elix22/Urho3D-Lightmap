@@ -15,7 +15,7 @@ I've applied the same changes to the hlsl shader for texture baking, but for som
 ---  
 ### Setup:
 * the default lightmap texture size is set to 64x64. Override in **LightmapCreator::QueueNodesForIndirectLightProcess(), BeginIndirectLighting()**.
-* the default unlit baked texture size is set to 512x512. Override in **LightmapCreator::BakeIndirectLight(), BakeDirectLight()**.
+* the default unlit baked texture size is set to 512x512. Override in **LightmapCreator::BakeIndirectLight(), BakeIndirectLight()**.
 * the direct render texture size is set to 1024x1024 by default to reduce the shadow jaggedness, but it's till not smooth as it's desired. Setup is in **LightmapCreator::BakeDirectLight()**.
 * output files are placed in the **Lightmap/BakedTextures** folder.
   

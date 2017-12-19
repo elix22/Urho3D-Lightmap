@@ -102,6 +102,7 @@ protected:
     WeakPtr<RenderSurface>  renderSurface_;
 
     SharedPtr<Image>        bakedLightImage_;
+    SharedPtr<Image>        directLightImage_;
     SharedPtr<Image>        lightmapImage_;
     bool                    bakeUnlitLight_;
 

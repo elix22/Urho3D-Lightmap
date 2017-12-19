@@ -45,6 +45,7 @@
 #include <cstdio>
 
 #include "TextureBake.h"
+#include "Lightmap.h"
 
 #include <Urho3D/DebugNew.h>
 //=============================================================================
@@ -56,7 +57,7 @@ TextureBake::TextureBake(Context* context)
     , texHeight_(512)
     , saveFile_(true)
     , bakeUnlitLight_(false)
-    , bakeMixFactor_(0.8f)
+    , bakeMixFactor_(1.0f)
 {
 }
 
@@ -220,7 +221,7 @@ void TextureBake::BakeIndirectLight(const String &filepath, unsigned imageSize)
         // setup direct and indirect textures
         SharedPtr<Texture2D> normalTex(new Texture2D(context_));
         SharedPtr<Texture2D> emissiveTex(new Texture2D(context_));
-        normalTex->SetData(bakedLightImage_);
+        normalTex->SetData(directLightImage_);
         emissiveTex->SetData(lightmapImage_);
 
         dupMat->SetTexture(TU_NORMAL, normalTex);
@@ -292,7 +293,6 @@ void TextureBake::OutputFile()
     if (saveFile_ && bakeUnlitLight_)
     {
         String name = ToString("node%u_unlit.png", node_->GetID());
-
         String path = filepath_ + name;
 
         bakedLightImage_->SavePNG(path);
@@ -313,6 +313,11 @@ void TextureBake::HandlePostRenderBakeLighting(StringHash eventType, VariantMap&
 {
     // get image prior to deleting the surface
     bakedLightImage_ = renderTexture_->GetImage();
+
+    if (!bakeUnlitLight_)
+    {
+        directLightImage_ = renderTexture_->GetImage();
+    }
 
     RestoreTempViewMask();
 
