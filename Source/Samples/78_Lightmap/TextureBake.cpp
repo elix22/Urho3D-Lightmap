@@ -56,8 +56,7 @@ TextureBake::TextureBake(Context* context)
     , texWidth_(512)
     , texHeight_(512)
     , saveFile_(true)
-    , bakeUnlitLight_(false)
-    , bakeMixFactor_(1.0f)
+    , bakeUnlitCombined_(false)
 {
 }
 
@@ -121,7 +120,7 @@ void TextureBake::BakeDirectLight(const String &filepath, unsigned imageSize)
 
         texWidth_ = texHeight_ = imageSize;
         filepath_ = filepath;
-        bakeUnlitLight_ = false;
+        bakeUnlitCombined_ = false;
 
         // clone mat to make changes
         SharedPtr<Material> dupMat = origMaterial_->Clone();
@@ -164,7 +163,7 @@ void TextureBake::SwitchToDirectImageUnlitTechnique()
         dupMat->SetTechnique(0, cache->GetResource<Technique>("Techniques/DiffUnlitTexCoord2.xml"));
 
         SharedPtr<Texture2D> diffTex(new Texture2D(context_));
-        diffTex->SetData(bakedLightImage_);
+        diffTex->SetData(directLightImage_);
         dupMat->SetTexture(TU_DIFFUSE, diffTex);
     }
 }
@@ -209,7 +208,7 @@ void TextureBake::BakeIndirectLight(const String &filepath, unsigned imageSize)
 
         texWidth_ = texHeight_ = imageSize;
         filepath_ = filepath;
-        bakeUnlitLight_ = true;
+        bakeUnlitCombined_ = true;
 
         // clone mat to make changes
         SharedPtr<Material> dupMat = origMaterial_->Clone();
@@ -226,7 +225,6 @@ void TextureBake::BakeIndirectLight(const String &filepath, unsigned imageSize)
 
         dupMat->SetTexture(TU_NORMAL, normalTex);
         dupMat->SetTexture(TU_EMISSIVE, emissiveTex);
-        dupMat->SetShaderParameter("MixFactor", bakeMixFactor_);
 
         //**NOTE** change mask
         staticModel_->SetViewMask(staticModel_->GetViewMask() | ViewMask_Capture);
@@ -290,12 +288,12 @@ void TextureBake::Stop()
 void TextureBake::OutputFile()
 {
     // generate output file
-    if (saveFile_ && bakeUnlitLight_)
+    if (saveFile_ && bakeUnlitCombined_)
     {
         String name = ToString("node%u_unlit.png", node_->GetID());
         String path = filepath_ + name;
 
-        bakedLightImage_->SavePNG(path);
+        unlitCombinedImage_->SavePNG(path);
     }
 }
 
@@ -312,9 +310,11 @@ void TextureBake::SendTextureBakedtMsg()
 void TextureBake::HandlePostRenderBakeLighting(StringHash eventType, VariantMap& eventData)
 {
     // get image prior to deleting the surface
-    bakedLightImage_ = renderTexture_->GetImage();
-
-    if (!bakeUnlitLight_)
+    if (bakeUnlitCombined_)
+    {
+        unlitCombinedImage_ = renderTexture_->GetImage();
+    }
+    else
     {
         directLightImage_ = renderTexture_->GetImage();
     }

@@ -5,7 +5,6 @@
 #include "Fog.glsl"
 
 varying vec2 vTexCoord;
-uniform float cMixFactor;
 
 void VS()
 {
@@ -27,7 +26,7 @@ void PS()
     vec3 direct    = texture2D(sNormalMap, vTexCoord).rgb;
     vec3 indirect  = texture2D(sEmissiveMap, vTexCoord).rgb;
 
-    diffColor.rgb *= direct + indirect * cMixFactor;
+    diffColor.rgb *= direct + indirect;
 
     gl_FragColor = diffColor;
 }

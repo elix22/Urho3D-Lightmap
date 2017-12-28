@@ -9,9 +9,6 @@ Indirect lighting process is **blazing fast** using Urho3D's tech., and the defa
 * lightmap - used for dynamic environment.
 * unlit - used for static environment.
 
-#### Full OpenGL Implementation
-I've applied the same changes to the hlsl shader for texture baking, but for some reason, I only get black images from the view capture. I will not be pursuing this fix.
-
 ---  
 ### Setup:
 * the default lightmap texture size is set to 64x64. Override in **LightmapCreator::QueueNodesForIndirectLightProcess(), BeginIndirectLighting()**.
@@ -34,6 +31,10 @@ Baking the unlit textures on the GPU produces some black edges. Changing the ren
 #### Light Bounce 2
 ![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/lightbounce2.png)  
 *Light bounces are shown shaded with DiffLightMap and NoTextureLightMap techniques.*  
+
+#### Unlit Baked Scene
+![alt tag](https://github.com/Lumak/Urho3D-Lightmap/blob/master/screenshot/UnlitBakedImage.png)  
+*Lightmap/bakedScene.xml shown in the editor with zero lights and zero shadowmaps.*  
 
 ---
 ### To Build

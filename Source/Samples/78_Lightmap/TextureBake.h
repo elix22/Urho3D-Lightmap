@@ -78,9 +78,6 @@ public:
     void SetSavefile(bool bset)             { saveFile_ =  bset; }
     bool GetSavefile() const                { return saveFile_; }
 
-    void SetBakeMixFactor(float mixFactor)  { bakeMixFactor_ = mixFactor; }
-    float GetBakeMixFactor() const          { return bakeMixFactor_; }
-
 protected:
     void InitBakeLightSettings(const BoundingBox& worldBoundingBox);
     void HandlePostRenderBakeLighting(StringHash eventType, VariantMap& eventData);
@@ -101,15 +98,14 @@ protected:
     SharedPtr<Texture2D>    renderTexture_;
     WeakPtr<RenderSurface>  renderSurface_;
 
-    SharedPtr<Image>        bakedLightImage_;
+    SharedPtr<Image>        unlitCombinedImage_;
     SharedPtr<Image>        directLightImage_;
     SharedPtr<Image>        lightmapImage_;
-    bool                    bakeUnlitLight_;
+    bool                    bakeUnlitCombined_;
 
     String                  filepath_;
     unsigned                texWidth_;
     unsigned                texHeight_;
     bool                    saveFile_;
-    float                   bakeMixFactor_;
 
 };
